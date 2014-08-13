@@ -1,0 +1,7 @@
+seattlelib_v1/*
+zenodotus/*
+utf/*
+dist/LICENSE.txt
+# Tests
+test seattlelib_v1/tests/*
+test seattlelib_v1/test/*
