@@ -1,7 +1,12 @@
 seattlelib_v1/*
 zenodotus/*
+repy_v2/*
+portability/*
 utf/*
 dist/LICENSE.txt
 # Tests
 test seattlelib_v1/tests/*
 test seattlelib_v1/test/*
+test portability/tests/*
+test repy_v2/testsV2/*
+test nodemanager/tests/restrictions.test
