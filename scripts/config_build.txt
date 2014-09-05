@@ -1,7 +1,8 @@
-DEPENDENCIES/seattlelib_v1/*
 ./*
-DEPENDENCIES/repy_v2/*
+DEPENDENCIES/seattlelib_v1/*
+DEPENDENCIES/repy_v1/*
 DEPENDENCIES/portability/*
 DEPENDENCIES/common/*
-DEPENDENCIES/common/utf/*
+
 # Tests
+test DEPENDENCIES/common/utf/*
