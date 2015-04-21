@@ -224,6 +224,16 @@ def _do_dns_callback(query_dictionary):
                'time_to_live': 0,
                'answer_data': { 'address': "127.0.0.1" } })
           query_dictionary['answer_count'] += 1
+        elif question_name == 'myresolver.' + subdomain:
+          # If the queried name is myresolver.zenodotus.poly.edu, reply
+          # with who asked. This lets you trace the resolvers you use.
+          query_dictionary['answers'].append({
+               'name': question_name,
+               'type': question_type,
+               'class': question_class,
+               'time_to_live': 0,
+               'answer_data': { 'address': query_dictionary["remote_ip"] } })
+          query_dictionary['answer_count'] += 1
 
         # This part involves a lot of compact and complicated string operations.
         # It is slightly horrifying. It handles redirection to additional name servers
