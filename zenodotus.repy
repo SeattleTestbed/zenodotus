@@ -76,13 +76,10 @@ _debug_stream = None
 _host_ip_address = None
 
 
-<<<<<<< HEAD
 # This is the subdomain for which zenodotus will be used. Currently
 # Zenodotus is hosted on poly.edu and will contain the subdomain
 # zenodotus.poly.edu
 subdomain = "zenodotus.poly.edu"
-=======
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
 
 
 def _do_dns_callback(query_dictionary):
@@ -159,7 +156,6 @@ def _do_dns_callback(query_dictionary):
     with strings received from the advertise service.
   """
   # Record the time at which this method begins.
-<<<<<<< HEAD
   stopwatch_lap = time_gettime()
 
   # These types are all dealt with in the same way, format-wise.
@@ -173,22 +169,6 @@ def _do_dns_callback(query_dictionary):
       print "  " + str(key) + " : " + str(query_dictionary[key])
     print "================================"
 
-=======
-  method_time = getruntime()
-
-  # These types are all dealt with in the same way, format-wise.
-  simple_answers = ['NS', 'CNAME', 'MD', 'MB', 'MF', 'MG', 'MR', 'MX', 'PTR']
-
-  # No doubt the debugger will be interested in a query dump.
-  if _verbose:
-    print "===================================="
-    print "| Callback started with arguments: |"
-    print "===================================="
-    for key in query_dictionary.keys():
-      print "  " + str(key) + " : " + str(query_dictionary[key])
-    print "====================================\n"
-
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
   try:
     query_dictionary['query_response'] = True
     query_dictionary['authority_advisory'] = True
@@ -220,11 +200,7 @@ def _do_dns_callback(query_dictionary):
       if question_class != 'IN':
         raise NotImplementedError("Non-IN query is unacceptable.")
       if question_type == 'A':
-<<<<<<< HEAD
         if question_name == subdomain:
-=======
-        if question_name == 'zenodotus.cs.washington.edu':
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
           query_dictionary['answers'].append({
                'name': question_name, 
                'type': question_type,
@@ -240,11 +216,7 @@ def _do_dns_callback(query_dictionary):
                'time_to_live': 0,
                'answer_data': { 'address': "127.0.0.1" } })
           query_dictionary['answer_count'] += 1
-<<<<<<< HEAD
         elif question_name == 'localhost.' + subdomain:
-=======
-        elif question_name == 'localhost.zenodotus.cs.washington.edu':
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
           query_dictionary['answers'].append({
                'name': question_name,
                'type': question_type,
@@ -255,18 +227,12 @@ def _do_dns_callback(query_dictionary):
 
         # This part involves a lot of compact and complicated string operations.
         # It is slightly horrifying. It handles redirection to additional name servers
-<<<<<<< HEAD
         elif question_name.endswith(subdomain) and len(question_name[:-28].split(".")) > 1:
           print "GOT A REDIRECT!"
           service_name = question_name[:-28].split(".")[len(question_name[:-28].split(".")) - 1]
           print "SERVICE NAME: " + str(service_name)
           lookup_name = service_name + '.' + subdomain
           print "LOOKUP NAME: " + str(lookup_name)
-=======
-        elif question_name.endswith("zenodotus.cs.washington.edu") and len(question_name.split(".")) > 5:
-          service_name = question_name[:-28].split(".")[len(question_name[:-28].split(".")) - 1]
-          lookup_name = service_name + ".zenodotus.cs.washington.edu"
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
 
           answers = zenodotus_advertise_do_lookup(lookup_name, 'NS')
 
@@ -278,7 +244,6 @@ def _do_dns_callback(query_dictionary):
                  'time_to_live': 0,
                  'answer_data': { 'address': answer } })
 
-<<<<<<< HEAD
           query_dictionary['authority_record_count'] += len(answers)
 
         else:
@@ -432,160 +397,6 @@ def _do_dns_callback(query_dictionary):
       print "================================="
       for key in query_dictionary.keys():
         print "  " + str(key) + " : " + str(query_dictionary[key])
-=======
-          query_dictionary['answer_count'] += len(answers)
-
-        else:
-          # Begin "stopwatch" for the advertise stuff.
-          pre_advertise_time = getruntime()
-          
-          # Get advertise data
-          answers = zenodotus_advertise_do_lookup(question_name, question_type)
-
-          if _verbose:
-            advertise_time = getruntime() - pre_advertise_time
-            print "::NOTICE:: Advertise lookup took " + str(advertise_time) + " seconds.\n"
-
-          query_dictionary['answer_count'] += len(answers)
-
-          for answer in answers:
-            query_dictionary['answers'].append({
-                 'name': question_name,
-                 'type': question_type,
-                 'class': question_class,
-                 'time_to_live': 0,
-                 'answer_data': { 'address': answer } })
-
-      elif question_type == 'NS':
-
-        if question_name == 'zenodotus.cs.washington.edu':
-          query_dictionary['answers'].append({
-               'name': question_name,
-               'type': question_type,
-               'class': question_class,
-               'time_to_live': 0,
-               'answer_data': { 'address': 'zenodotus.cs.washington.edu' } })
-
-          query_dictionary['answer_count'] += 1
-
-          query_dictionary['answers'].append({
-               'name': question_name,
-               'type': question_type,
-               'class': question_class,
-               'time_to_live': 0,
-               'answer_data': { 'address': 'zenodotus.cs.washington.edu' } })
-
-          query_dictionary['additional_record_count'] += 1
-
-        else:
-          pre_advertise_time = getruntime()
-
-       	  answers = zenodotus_advertise_do_lookup(question_name, question_type)
-
-          if _verbose:
-            advertise_time = getruntime() - pre_advertise_time
-            print "::NOTICE:: Advertise lookup took " + str(advertise_time) + " seconds.\n"
-
-          for answer in answers:
-            query_dictionary['answers'].append({
-       	         'name': question_name,
-                 'type': question_type,
-                 'class': question_class,
-                 'time_to_live': 0,
-                 'answer_data': { 'address': answer } })
-
-          query_dictionary['answer_count'] += len(answers)
-
-
-      elif question_type == 'SOA':
-        if question_name != "zenodotus.cs.washington.edu":
-          pre_advertise_time = getruntime()
-          
-          answers = zenodotus_advertise_do_lookup(question_name, question_type)
-
-          if _verbose:
-            advertise_time = getruntime() - pre_advertise_time
-            print "::NOTICE:: Advertise lookup took " + str(advertise_time) + " seconds.\n"
-
-          query_dictionary['answer_count'] += len(answers)
-
-          for answer in answers:
-            answer_data = {
-                'mname': answer,
-                'rname': 'autogen.noaddress',
-                'serial': _SOA_SERIAL,
-                'retry': 900,
-                'refresh': 10800,
-                'expire': 3600000,
-                'minimum': 1 }
-
-            query_dictionary['answers'].append({
-                'name': question_name,
-                'type': question_type,
-                'class': question_class,
-                'time_to_live': 0,
-                'answer_data': answer_data })
-        else:
-          query_dictionary['answer_count'] += 1
-          query_dictionary['additional_record_count'] += 1
-
-          answer_data = {
-                'mname': "testbed-ubuntu.cs.washington.edu",
-                'rname': "sebass63.uw.edu",
-                'serial': _SOA_SERIAL,
-                'retry': 900,
-                'refresh': 10800,
-                'expire': 3600000,
-                'minimum': 1 }
-
-          query_dictionary['answers'].append({
-               'name': question_name,
-               'type': question_type,
-               'class': question_class,
-               'time_to_live': 0,
-               'answer_data': answer_data })
-          query_dictionary['answers'].append({
-               'name': "testbed-ubuntu.cs.washington.edu",
-               'type': 'A',
-               'class': question_class,
-               'time_to_live': 0,
-               'answer_data': {'address': _host_ip_address } })
-
-      elif question_type in simple_answers:
-        pre_advertise_time = getruntime()
-        answers = zenodotus_advertise_do_lookup(question_name, question_type)
-
-        if _verbose:
-          advertise_time = getruntime() - pre_advertise_time
-          print "::NOTICE:: Advertise lookup took " + str(advertise_time) + " seconds.\n"
-
-        for answer in answers:
-          query_dictionary['answers'].append({
-             'name': question_name,
-             'type': question_type,
-             'class': question_class,
-             'time_to_live': 0,
-             'answer_data': { 'address': answer } })
-
-        query_dictionary['answer_count'] = len(answers)
-
-      else:
-        raise NotImplementedError("Query type " + str(question_type) + " not implemented!")
-
-    ############################################
-    #      End TYPE checking/formatting        #
-    ############################################
-
-    if _verbose:
-      print "Processing successful. Returning:"
-      print "================================="
-      for key in query_dictionary.keys():
-        print "  " + str(key) + " : " + str(query_dictionary[key])
-
-    if _verbose:
-      total_time = getruntime() - method_time
-      print "::NOTICE:: Method took " + str(total_time) + " seconds.\n"
->>>>>>> parent of f4e5d78... Re-created hosts.txt functionality for zenodotus. This version does not support custom SOA or NS records yet,
 
     return query_dictionary
   except NotImplementedError, e:
