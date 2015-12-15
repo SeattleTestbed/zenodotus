@@ -186,8 +186,9 @@ def _connection_received_callback(client_ip, client_port, dns_query_data,
   <Returns>
     None
   """
-  # If the IP is blacklisted, we ignore the query.
-  if client_ip in refuse_ips:
+  # If the IP is blacklisted, or the client source port is 0 (see #11), 
+  # we ignore the query.
+  if client_ip in refuse_ips or client_port == 0:
     return
 
   # Blacklist the connector's IP so that frivolous retries don't waste 
